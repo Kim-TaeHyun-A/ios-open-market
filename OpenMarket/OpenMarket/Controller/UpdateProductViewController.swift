@@ -111,20 +111,8 @@ extension UpdateProductViewController {
     }
     
     @objc private func touchUpDoneButton() {
-        if updateProductViewModel.isImagesEmpty() {
-            let alertController = Alert().showWarning(title: "이미지를 1개 이상 선택하세요.")
-            present(alertController, animated: true)
-            return
-        }
-
-        guard updateProductViewModel.isProductInputNameValid() else {
-            let alertController = Alert().showWarning(title: "3자 이상으로 이름을 입력하세요.")
-            present(alertController, animated: true)
-            return
-        }
-
-        guard updateProductViewModel.isProductDescriptionValid() else {
-            let alertController = Alert().showWarning(title: "10자 이상 descripion을 입력하세요.")
+        if let title = Alert().setUpTitle(updateProductViewModel: updateProductViewModel) {
+            let alertController = Alert().showWarning(title: title)
             present(alertController, animated: true)
             return
         }
@@ -132,12 +120,6 @@ extension UpdateProductViewController {
         updateProductViewModel.convertDescription()
         
         if updateProductViewModel.isProductDetailEmpty() == false {
-            if updateProductViewModel.isProductInputEmpty() {
-                let alertController = Alert().showWarning(title: "수정 사항이 없으면\ncancel을 눌러주세요")
-                present(alertController, animated: true)
-                return
-            }
-            
             updateProductViewModel.patchData(completionHandler: completionHandler)
             return
         }

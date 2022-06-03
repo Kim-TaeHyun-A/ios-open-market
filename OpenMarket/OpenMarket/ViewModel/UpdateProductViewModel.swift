@@ -113,4 +113,8 @@ class UpdateProductViewModel {
     func getProductDetail() -> ProductDetail? {
         return product
     }
+    
+    func isNotEdited() -> Bool {
+        return isProductDetailEmpty() == false && isProductInputEmpty()
+    }
 }
