@@ -72,9 +72,8 @@ class UpdateProductViewController: UIViewController {
         super.viewDidLoad()
         setUpNavigationItem()
         
-        if updateProductViewModel.isProductDetailEmpty() == false {
-            updateProductViewModel.fetchProductDetailImage()
-        }
+        updateProductViewModel.fetchProductDetailImage()
+        
         collectionViewLayout = createLayout()
         
         configureHierarchy(collectionViewLayout: collectionViewLayout)
@@ -305,18 +304,7 @@ extension UpdateProductViewController: UIImagePickerControllerDelegate, UINaviga
 
 extension UpdateProductViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
-        switch textField.placeholder {
-        case "상품명":
-            updateProductViewModel.setProductInputName(with: textField.text)
-        case "상품가격":
-            updateProductViewModel.setProductInputPrice(with: textField.text)
-        case "할인금액":
-            updateProductViewModel.setProductInputDiscountedPrice(with: textField.text)
-        case "재고수량":
-            updateProductViewModel.setProductInputStock(with: textField.text)
-        default:
-            break
-        }
+        updateProductViewModel.setProductInput(textField: textField)
     }
 }
 

@@ -25,6 +25,7 @@ class UpdateProductViewModel {
     }
     
     func fetchProductDetailImage() {
+        guard isProductDetailEmpty() == false else { return }
         product?.images.forEach { image in
             DataProvider.shared.fetchImage(urlString: image.url) { [weak self] image in
                 self?.images.append(image: image)
@@ -90,19 +91,19 @@ class UpdateProductViewModel {
         productInput.setCurrency(with: value)
     }
     
-    func setProductInputName(with value: String?) {
+    private func setProductInputName(with value: String?) {
         productInput.setName(with: value)
     }
     
-    func setProductInputPrice(with value: String?) {
+    private func setProductInputPrice(with value: String?) {
         productInput.setPrice(with: value)
     }
     
-    func setProductInputDiscountedPrice(with value: String?) {
+    private func setProductInputDiscountedPrice(with value: String?) {
         productInput.setDiscountedPrice(with: value)
     }
     
-    func setProductInputStock(with value: String?) {
+    private func setProductInputStock(with value: String?) {
         productInput.setStock(with: value)
     }
     
@@ -116,5 +117,20 @@ class UpdateProductViewModel {
     
     func isNotEdited() -> Bool {
         return isProductDetailEmpty() == false && isProductInputEmpty()
+    }
+    
+    func setProductInput(textField: UITextField) {
+        switch textField.placeholder {
+        case "상품명":
+            setProductInputName(with: textField.text)
+        case "상품가격":
+            setProductInputPrice(with: textField.text)
+        case "할인금액":
+            setProductInputDiscountedPrice(with: textField.text)
+        case "재고수량":
+            setProductInputStock(with: textField.text)
+        default:
+            break
+        }
     }
 }
