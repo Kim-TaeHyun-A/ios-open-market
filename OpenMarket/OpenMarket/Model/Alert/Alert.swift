@@ -13,6 +13,7 @@ struct Alert {
         case name
         case description
         case noChange
+        case failedNetwork
         
         var string: String {
             switch self {
@@ -24,11 +25,17 @@ struct Alert {
                 return "10자 이상 descripion을 입력하세요."
             case .noChange:
                 return "수정 사항이 없으면\ncancel을 눌러주세요"
+            case .failedNetwork:
+                return "실패했습니다"
             }
         }
     }
     
-    func setUpTitle(updateProductViewModel: UpdateProductViewModel) -> String? {
+    func setUpTitle(updateProductViewModel: UpdateProductViewModel? = nil) -> String? {
+        guard let updateProductViewModel = updateProductViewModel else {
+            return Title.failedNetwork.string
+        }
+
         if updateProductViewModel.isImagesEmpty() {
             return Title.image.string
         } else if updateProductViewModel.isProductInputNameValid() == false {

@@ -41,7 +41,9 @@ class UpdateProductViewController: UIViewController {
                 self?.dismiss(animated: true)
             }
         case .failure(_):
-            let alert = Alert().showWarning(title: "경고", message: "실패했습니다", completionHandler: nil)
+            guard let title = Alert().setUpTitle() else { return }
+            
+            let alert = Alert().showWarning(title: title, completionHandler: nil)
             DispatchQueue.main.async { [weak self] in
                 self?.present(alert, animated: true)
             }
