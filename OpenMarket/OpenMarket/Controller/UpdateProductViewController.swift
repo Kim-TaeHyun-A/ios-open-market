@@ -7,6 +7,14 @@
 
 import UIKit
 
+extension UpdateProductViewController: CollectionViewSettingProtocol {
+    func loadData() {
+        DispatchQueue.main.async { [weak self] in
+            self?.collectionView?.reloadData()
+        }
+    }
+}
+
 class UpdateProductViewController: UIViewController {
     enum Section: Int, Hashable, CaseIterable, CustomStringConvertible {
         case image
@@ -43,11 +51,12 @@ class UpdateProductViewController: UIViewController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
+        updateProductViewModel.setImagesDelegate(with: self)
     }
     
     convenience init(product: ProductDetail) {
         self.init()
-        self.product = product
+        updateProductViewModel.setUpProductDetail(with: product)
     }
     
     required init?(coder: NSCoder) {
@@ -63,12 +72,8 @@ class UpdateProductViewController: UIViewController {
         super.viewDidLoad()
         setUpNavigationItem()
         
-        if let product = product {
-            product.images.forEach { image in
-                DataProvider.shared.fetchImage(urlString: image.url) { [weak self] image in
-                    self?.images.append(image)
-                }
-            }
+        if updateProductViewModel.isProductDetailEmpty() == false {
+            updateProductViewModel.fetchProductDetailImage()
         }
         collectionViewLayout = createLayout()
         
@@ -102,45 +107,46 @@ extension UpdateProductViewController {
 
 extension UpdateProductViewController {
     private func setUpNavigationItem() {
-        navigationItem.title = product == nil ? "상품등록": "상품수정"
+        navigationItem.title = updateProductViewModel.isProductDetailEmpty() ? "상품등록": "상품수정"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(touchUpDoneButton))
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.cancel, target: self, action: #selector(touchUpCancelButton))
     }
     
     @objc private func touchUpDoneButton() {
-        if images.count == 0 {
+        if updateProductViewModel.isImagesEmpty() {
             let alertController = Alert().showWarning(title: "이미지를 1개 이상 선택하세요.")
             present(alertController, animated: true)
             return
         }
 
-        guard productInput.isValidName(product: product) else {
+        guard updateProductViewModel.isProductInputNameValid() else {
             let alertController = Alert().showWarning(title: "3자 이상으로 이름을 입력하세요.")
             present(alertController, animated: true)
             return
         }
 
-        guard productInput.isValidDescription(product: product) else {
+        guard updateProductViewModel.isProductDescriptionValid() else {
             let alertController = Alert().showWarning(title: "10자 이상 descripion을 입력하세요.")
             present(alertController, animated: true)
             return
         }
         
-        productInput.convertDescription()
+        updateProductViewModel.convertDescription()
         
-        if let product = product {
-            if productInput.isEmpty {
+        if updateProductViewModel.isProductDetailEmpty() == false {
+            if updateProductViewModel.isProductInputEmpty() {
                 let alertController = Alert().showWarning(title: "수정 사항이 없으면\ncancel을 눌러주세요")
                 present(alertController, animated: true)
                 return
             }
             
-            DataSender.shared.patchProductData(prductIdentifier: product.identifier, productInput: productInput.getProductInput(), completionHandler: completionHandler)
+            updateProductViewModel.patchData(completionHandler: completionHandler)
             return
         }
         
-        productInput.setDefaultCurrency()
-        DataSender.shared.postProductData(images: images, productInput: productInput.getProductInput(), completionHandler: completionHandler)
+        updateProductViewModel.setProductInputDefaultCurrency()
+        
+        updateProductViewModel.postData(completionHandler: completionHandler)
     }
     
     @objc private func touchUpCancelButton() {
@@ -240,10 +246,11 @@ extension UpdateProductViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if section == 0 {
-            if product == nil, images.count == 5 {
+            if updateProductViewModel.isProductDetailEmpty(), updateProductViewModel.isImagesFull() {
                 return 5
             }
-            let itemCount = product == nil ? images.count + 1 : images.count
+            let imageCount = updateProductViewModel.getImagesCount()
+            let itemCount = updateProductViewModel.isProductDetailEmpty() ? imageCount + 1 : imageCount
             return itemCount
         } else if section == 1 {
             return 1
@@ -252,21 +259,25 @@ extension UpdateProductViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let emptyCell = collectionView.dequeueReusableCell(withReuseIdentifier: "EmptyCell", for: indexPath)
+        
         if indexPath.section == 0 {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath) as? ImageCell else {
-                return collectionView.dequeueReusableCell(withReuseIdentifier: "EmptyCell", for: indexPath)
+                return emptyCell
             }
             
-            if let _ = product {
+            if updateProductViewModel.isProductDetailEmpty() == false {
+                guard let image = updateProductViewModel.getImage(from: indexPath.row) else { return emptyCell
+                }
                 cell.hidePlusButton()
-                cell.setImageView(with: images[indexPath.row])
+                cell.setImageView(with: image)
                 return cell
             }
             
-            if images.count != indexPath.row {
+            if updateProductViewModel.getImagesCount() != indexPath.row {
                 cell.hidePlusButton()
-                guard let image = images[safe: indexPath.row] else {
-                    return collectionView.dequeueReusableCell(withReuseIdentifier: "EmptyCell", for: indexPath)
+                guard let image = updateProductViewModel.getImage(from: indexPath.row) else {
+                    return emptyCell
                 }
                 cell.setImageView(with: image)
                 return cell
@@ -274,16 +285,11 @@ extension UpdateProductViewController: UICollectionViewDataSource {
             return cell
         } else {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TextCell", for: indexPath) as? TextCell else {
-                return collectionView.dequeueReusableCell(withReuseIdentifier: "EmptyCell", for: indexPath)
+                return emptyCell
             }
             
-            if let product = product {
-                cell.setElement(name: product.name,
-                                price: product.price,
-                                bargainPrice: product.price - product.bargainPrice,
-                                stock: product.stock,
-                                currency: product.currency,
-                                description: product.description)
+            if updateProductViewModel.isProductDetailEmpty() == false {
+                cell.setElement(with: updateProductViewModel.getProductDetail())
             }
             cell.delegate = self
             cell.setUpDelegate()
@@ -295,7 +301,7 @@ extension UpdateProductViewController: UICollectionViewDataSource {
 
 extension UpdateProductViewController: TextCellDelegate {
     func observeSegmentIndex(value: String) {
-        productInput.setCurrency(with: value)
+        updateProductViewModel.setProductInputCurrency(with: value)
     }
 }
 
@@ -328,7 +334,7 @@ extension UpdateProductViewController: UIImagePickerControllerDelegate, UINaviga
         }
         
         if let newImage = newImage {
-            images.append(newImage)
+            updateProductViewModel.appendImage(with: newImage)
         }
         
         picker.dismiss(animated: true)
@@ -339,13 +345,13 @@ extension UpdateProductViewController: UITextFieldDelegate {
     func textFieldDidChangeSelection(_ textField: UITextField) {
         switch textField.placeholder {
         case "상품명":
-            productInput.setName(with: textField.text)
+            updateProductViewModel.setProductInputName(with: textField.text)
         case "상품가격":
-            productInput.setPrice(with: textField.text)
+            updateProductViewModel.setProductInputPrice(with: textField.text)
         case "할인금액":
-            productInput.setDiscountedPrice(with: textField.text)
+            updateProductViewModel.setProductInputDiscountedPrice(with: textField.text)
         case "재고수량":
-            productInput.setStock(with: textField.text)
+            updateProductViewModel.setProductInputStock(with: textField.text)
         default:
             break
         }
@@ -354,6 +360,6 @@ extension UpdateProductViewController: UITextFieldDelegate {
 
 extension UpdateProductViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
-        productInput.setDescriptions(with: textView.text)
+        updateProductViewModel.setDescriptions(with: textView.text)
     }
 }

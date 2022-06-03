@@ -149,15 +149,19 @@ class TextCell: UICollectionViewCell {
         }
     }
     
-    func setElement(name: String, price: Int, bargainPrice: Int, stock: Int, currency: String, description: String) {
-        nameTextField.text = name
-        priceTextField.text = String(price)
-        discountedPriceTextField.text = String(price - bargainPrice)
-        stockTextField.text = String(stock)
+    func setElement(with productDetail: ProductDetail?) {
+        guard let productDetail = productDetail else {
+            return
+        }
         
-        segmentedControl.selectedSegmentIndex = currency == "KRW" ? 0 : 1
+        nameTextField.text = productDetail.name
+        priceTextField.text = String(productDetail.price)
+        discountedPriceTextField.text = String(productDetail.price - productDetail.bargainPrice)
+        stockTextField.text = String(productDetail.stock)
         
-        descriptionTextView.text = description.replacingOccurrences(of: "\\n", with: "\n")
+        segmentedControl.selectedSegmentIndex = productDetail.currency == "KRW" ? 0 : 1
+        
+        descriptionTextView.text = productDetail.description.replacingOccurrences(of: "\\n", with: "\n")
     }
     
     func setUpDelegate() {
