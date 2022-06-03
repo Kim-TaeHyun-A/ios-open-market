@@ -244,6 +244,7 @@ extension UpdateProductViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath) as? ImageCell else {
                 return emptyCell
             }
+            cell.set(delegate: self)
             
             if updateProductViewModel.isProductDetailEmpty() == false {
                 guard let image = updateProductViewModel.getImage(from: indexPath.row) else { return emptyCell
@@ -288,9 +289,7 @@ extension UpdateProductViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView,
                         didSelectItemAt indexPath: IndexPath) {
         guard let cell = collectionView.cellForItem(at: indexPath) as? ImageCell else { return }
-        if !cell.isPlusButtonHidden {
-            present(imagePickerController.getImagePicker(), animated: true)
-        }
+        cell.present(imagePickerController: imagePickerController)
     }
 }
 
@@ -311,5 +310,11 @@ extension UpdateProductViewController: UITextFieldDelegate {
 extension UpdateProductViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         updateProductViewModel.setDescriptions(with: textView.text)
+    }
+}
+
+extension UpdateProductViewController: ImageCellDelegate {
+    func present(imagePickerController: ImagePickerController) {
+        present(imagePickerController.getImagePicker(), animated: true)
     }
 }

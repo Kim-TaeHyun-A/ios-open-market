@@ -7,7 +7,12 @@
 
 import UIKit
 
+protocol ImageCellDelegate: AnyObject{
+    func present(imagePickerController: ImagePickerController)
+}
+
 class ImageCell: UICollectionViewCell {
+    private weak var delegate: ImageCellDelegate?
     private let imageView: UIImageView = {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
@@ -31,10 +36,6 @@ class ImageCell: UICollectionViewCell {
         
         return button
     }()
-    
-    var isPlusButtonHidden: Bool {
-        return plusButton.isHidden
-    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -77,6 +78,16 @@ class ImageCell: UICollectionViewCell {
     
     func setImageView(with image: UIImage) {
         imageView.image = image
+    }
+    
+    func present(imagePickerController: ImagePickerController) {
+        if !plusButton.isHidden {
+            delegate?.present(imagePickerController: imagePickerController)
+        }
+    }
+    
+    func set(delegate: ImageCellDelegate) {
+        self.delegate = delegate
     }
     
     override func prepareForReuse() {
