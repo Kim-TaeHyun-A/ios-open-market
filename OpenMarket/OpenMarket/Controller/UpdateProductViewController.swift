@@ -243,24 +243,10 @@ extension UpdateProductViewController: UICollectionViewDataSource {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath) as? ImageCell else {
                 return emptyCell
             }
+            
             cell.set(delegate: self)
-            
-            if updateProductViewModel.isProductDetailEmpty() == false {
-                guard let image = updateProductViewModel.getImage(from: indexPath.row) else { return emptyCell
-                }
-                cell.hidePlusButton()
-                cell.setImageView(with: image)
-                return cell
-            }
-            
-            if updateProductViewModel.getImagesCount() != indexPath.row {
-                cell.hidePlusButton()
-                guard let image = updateProductViewModel.getImage(from: indexPath.row) else {
-                    return emptyCell
-                }
-                cell.setImageView(with: image)
-                return cell
-            }
+            cell.setImageView(updateProductViewModel: updateProductViewModel, indexPath: indexPath)
+
             return cell
         } else {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TextCell", for: indexPath) as? TextCell else {

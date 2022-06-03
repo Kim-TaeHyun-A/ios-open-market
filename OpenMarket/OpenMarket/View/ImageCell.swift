@@ -71,12 +71,12 @@ class ImageCell: UICollectionViewCell {
         ])
     }
     
-    func hidePlusButton() {
+    private func hidePlusButton() {
         plusButton.isHidden = true
         imageView.isHidden = false
     }
     
-    func setImageView(with image: UIImage) {
+    private func setImageView(with image: UIImage) {
         imageView.image = image
     }
     
@@ -88,6 +88,26 @@ class ImageCell: UICollectionViewCell {
     
     func set(delegate: ImageCellDelegate) {
         self.delegate = delegate
+    }
+    
+    func setImageView(updateProductViewModel: UpdateProductViewModel, indexPath: IndexPath) {
+        if updateProductViewModel.isProductDetailEmpty() == false {
+            guard let image = updateProductViewModel.getImage(from: indexPath.row) else {
+                return
+            }
+            hidePlusButton()
+            setImageView(with: image)
+            return
+        }
+        
+        if updateProductViewModel.getImagesCount() != indexPath.row {
+            hidePlusButton()
+            guard let image = updateProductViewModel.getImage(from: indexPath.row) else {
+                return
+            }
+            setImageView(with: image)
+            return
+        }
     }
     
     override func prepareForReuse() {
