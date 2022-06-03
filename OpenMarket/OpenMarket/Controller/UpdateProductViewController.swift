@@ -29,7 +29,7 @@ class UpdateProductViewController: UIViewController {
     }
     
     private let updateProductViewModel = UpdateProductViewModel()
-    private let imagePicker = UIImagePickerController()
+    private lazy var imagePickerController = ImagePickerController(delgate: self)
     private var collectionView: UICollectionView?
     private var collectionViewLayout: UICollectionViewLayout?
     private var bottomConstraint: NSLayoutConstraint?
@@ -80,9 +80,7 @@ class UpdateProductViewController: UIViewController {
         configureHierarchy(collectionViewLayout: collectionViewLayout)
         registerCell()
         setUpCollectionView()
-        
-        setUpImagePicker()
-        
+                
         registerNotification()
     }
 }
@@ -310,34 +308,16 @@ extension UpdateProductViewController: UICollectionViewDelegate {
                         didSelectItemAt indexPath: IndexPath) {
         guard let cell = collectionView.cellForItem(at: indexPath) as? ImageCell else { return }
         if !cell.isPlusButtonHidden {
-            present(imagePicker, animated: true)
+            present(imagePickerController.getImagePicker(), animated: true)
         }
-    }
-}
-
-extension UpdateProductViewController {
-    private func setUpImagePicker() {
-        imagePicker.sourceType = .photoLibrary
-        imagePicker.allowsEditing = true
-        imagePicker.delegate = self
     }
 }
 
 extension UpdateProductViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        var newImage: UIImage? = nil
-        
-        if let possibleImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
-            newImage = possibleImage
-        } else if let possibleImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            newImage = possibleImage
-        }
-        
-        if let newImage = newImage {
-            updateProductViewModel.appendImage(with: newImage)
-        }
-        
-        picker.dismiss(animated: true)
+        imagePickerController.pickImage(picker,
+                                        didFinishPickingMediaWithInfo: info,
+                                        updateProductViewModel: updateProductViewModel)
     }
 }
 
