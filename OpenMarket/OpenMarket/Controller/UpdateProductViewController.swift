@@ -253,9 +253,7 @@ extension UpdateProductViewController: UICollectionViewDataSource {
                 return emptyCell
             }
             
-            if updateProductViewModel.isProductDetailEmpty() == false {
-                cell.setElement(with: updateProductViewModel.getProductDetail())
-            }
+            cell.setElement(updateProductViewModel: updateProductViewModel)
             cell.delegate = self
             cell.setUpDelegate()
 

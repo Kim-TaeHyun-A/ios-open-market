@@ -149,7 +149,7 @@ class TextCell: UICollectionViewCell {
         }
     }
     
-    func setElement(with productDetail: ProductDetail?) {
+    private func setElement(with productDetail: ProductDetail?) {
         guard let productDetail = productDetail else {
             return
         }
@@ -179,5 +179,11 @@ class TextCell: UICollectionViewCell {
         }
         
         descriptionTextView.delegate = delegate
+    }
+    
+    func setElement(updateProductViewModel: UpdateProductViewModel) {
+        if updateProductViewModel.isProductDetailEmpty() == false {
+            setElement(with: updateProductViewModel.getProductDetail())
+        }
     }
 }
