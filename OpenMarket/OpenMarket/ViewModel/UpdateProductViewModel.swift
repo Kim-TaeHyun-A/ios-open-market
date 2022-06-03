@@ -69,6 +69,14 @@ class UpdateProductViewModel {
         return productInput.isEmpty
     }
     
+    func isValidPatchData(completionHandler: @escaping (Result<Data, NetworkError>) -> Void) -> Bool {
+        if isProductDetailEmpty() == false {
+            patchData(completionHandler: completionHandler)
+            return true
+        }
+        return false
+    }
+    
     func patchData(completionHandler: @escaping (Result<Data, NetworkError>) -> Void) {
         guard let product = product else {
             return

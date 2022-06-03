@@ -118,8 +118,7 @@ extension UpdateProductViewController {
         
         updateProductViewModel.convertDescription()
         
-        if updateProductViewModel.isProductDetailEmpty() == false {
-            updateProductViewModel.patchData(completionHandler: completionHandler)
+        if updateProductViewModel.isValidPatchData(completionHandler: completionHandler) {
             return
         }
         
