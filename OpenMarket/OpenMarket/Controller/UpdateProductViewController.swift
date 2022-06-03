@@ -224,12 +224,7 @@ extension UpdateProductViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if section == 0 {
-            if updateProductViewModel.isProductDetailEmpty(), updateProductViewModel.isImagesFull() {
-                return 5
-            }
-            let imageCount = updateProductViewModel.getImagesCount()
-            let itemCount = updateProductViewModel.isProductDetailEmpty() ? imageCount + 1 : imageCount
-            return itemCount
+            return updateProductViewModel.getImageItemCount()
         } else if section == 1 {
             return 1
         }

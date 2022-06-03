@@ -41,7 +41,7 @@ class UpdateProductViewModel {
         return images.isImagesEmpty()
     }
     
-    func isImagesFull() -> Bool {
+    private func isImagesFull() -> Bool {
         return images.isImagesFull()
     }
     
@@ -140,5 +140,14 @@ class UpdateProductViewModel {
         default:
             break
         }
+    }
+    
+    func getImageItemCount() -> Int {
+        if isProductDetailEmpty(), isImagesFull() {
+            return 5
+        }
+        let imageCount = getImagesCount()
+        let itemCount = isProductDetailEmpty() ? imageCount + 1 : imageCount
+        return itemCount
     }
 }
