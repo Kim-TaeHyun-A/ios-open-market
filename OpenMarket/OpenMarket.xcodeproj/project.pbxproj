@@ -24,6 +24,8 @@
 		6707CEA328348CF300A97982 /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6707CEA228348CF300A97982 /* String+.swift */; };
 		6707CEC528350B6C00A97982 /* UpdateProductViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6707CEC428350B6C00A97982 /* UpdateProductViewController.swift */; };
 		6724FDB8283370CC00183FC8 /* ProductGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6724FDB7283370CC00183FC8 /* ProductGridCell.swift */; };
+		6745AFC72849D64D00927C56 /* UpdateImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6745AFC62849D64D00927C56 /* UpdateImageViewModel.swift */; };
+		6745AFC92849D6C600927C56 /* UpdateProductViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6745AFC82849D6C600927C56 /* UpdateProductViewModel.swift */; };
 		675D90DE282A2D5B00A46468 /* HTTPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675D90DD282A2D5B00A46468 /* HTTPManager.swift */; };
 		675D90ED282BA28900A46468 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675D90EC282BA28900A46468 /* NetworkError.swift */; };
 		678A912B2846000C006B3E46 /* ProductInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678A912A2846000C006B3E46 /* ProductInput.swift */; };
@@ -69,6 +71,8 @@
 		6707CEA228348CF300A97982 /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
 		6707CEC428350B6C00A97982 /* UpdateProductViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateProductViewController.swift; sourceTree = "<group>"; };
 		6724FDB7283370CC00183FC8 /* ProductGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductGridCell.swift; sourceTree = "<group>"; };
+		6745AFC62849D64D00927C56 /* UpdateImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateImageViewModel.swift; sourceTree = "<group>"; };
+		6745AFC82849D6C600927C56 /* UpdateProductViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateProductViewModel.swift; sourceTree = "<group>"; };
 		675D90DD282A2D5B00A46468 /* HTTPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPManager.swift; sourceTree = "<group>"; };
 		675D90EC282BA28900A46468 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		678A912A2846000C006B3E46 /* ProductInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductInput.swift; sourceTree = "<group>"; };
@@ -182,6 +186,15 @@
 			path = Alert;
 			sourceTree = "<group>";
 		};
+		6745AFC52849D5C100927C56 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				6745AFC62849D64D00927C56 /* UpdateImageViewModel.swift */,
+				6745AFC82849D6C600927C56 /* UpdateProductViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		67FA257B282A007F0089BBE3 /* Scene */ = {
 			isa = PBXGroup;
 			children = (
@@ -239,10 +252,11 @@
 			isa = PBXGroup;
 			children = (
 				0E6DF3C5282A0B090076E0C6 /* Utils */,
+				0E7031482829F750002134CF /* Model */,
 				67FA257D282A00AF0089BBE3 /* View */,
+				6745AFC52849D5C100927C56 /* ViewModel */,
 				67FA257C282A00940089BBE3 /* Controller */,
 				67FA257B282A007F0089BBE3 /* Scene */,
-				0E7031482829F750002134CF /* Model */,
 				C70FB10325BEF61D00C9924E /* Assets.xcassets */,
 				C70FB10825BEF61D00C9924E /* Info.plist */,
 			);
@@ -365,6 +379,7 @@
 				0EE77F2E28350A0800E13561 /* Array+.swift in Sources */,
 				0EE5F0D7283FAF7F009BC931 /* Alert.swift in Sources */,
 				0E09C88428333EE7004E4568 /* ProductListCell.swift in Sources */,
+				6745AFC92849D6C600927C56 /* UpdateProductViewModel.swift in Sources */,
 				67FA257F282A05DA0089BBE3 /* OpenMarketProductList.swift in Sources */,
 				67EB7C37283CC30E00837605 /* MainViewControllerUnderiOS14.swift in Sources */,
 				0EBC5017283CC4F7006CF95B /* ContentUpdatable.swift in Sources */,
@@ -372,6 +387,7 @@
 				0EBC501B283DC5AF006CF95B /* TextCell.swift in Sources */,
 				C70FB0FD25BEF61C00C9924E /* SceneDelegate.swift in Sources */,
 				0E09C88928336E01004E4568 /* UIStackView+.swift in Sources */,
+				6745AFC72849D64D00927C56 /* UpdateImageViewModel.swift in Sources */,
 				0E6DF3CB282A0C0F0076E0C6 /* DecodingError.swift in Sources */,
 				6724FDB8283370CC00183FC8 /* ProductGridCell.swift in Sources */,
 				678EA5AE2833304B005CE9EA /* BaseView.swift in Sources */,

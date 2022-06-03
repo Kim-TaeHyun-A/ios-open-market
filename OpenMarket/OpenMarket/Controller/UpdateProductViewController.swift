@@ -20,16 +20,8 @@ class UpdateProductViewController: UIViewController {
         }
     }
     
-    private var productInput = ProductInput()
-    private var product: ProductDetail?
+    private let updateProductViewModel = UpdateProductViewModel()
     private let imagePicker = UIImagePickerController()
-    private var images: [UIImage] = [] {
-        didSet {
-            DispatchQueue.main.async { [weak self] in
-                self?.collectionView?.reloadData()
-            }
-        }
-    }
     private var collectionView: UICollectionView?
     private var collectionViewLayout: UICollectionViewLayout?
     private var bottomConstraint: NSLayoutConstraint?
