@@ -8,14 +8,10 @@
 import UIKit
 
 class ImageCell: UICollectionViewCell {
-    private let view: UIView = {
-        let view = UIView()
-        return view
-    }()
-    
     private let imageView: UIImageView = {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
+        image.isHidden = true
         return image
     }()
     
@@ -26,6 +22,8 @@ class ImageCell: UICollectionViewCell {
             button.setTitle("+", for: .normal)
             button.setTitleColor(UIColor.systemBlue, for: .normal)
             button.backgroundColor = .systemGray
+            
+            button.isUserInteractionEnabled = false
         }
         
         attribute()
@@ -40,7 +38,6 @@ class ImageCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        imageView.isHidden = true
         configureHierarchy()
         plusButtonLayout()
         imageLayout()
@@ -51,9 +48,8 @@ class ImageCell: UICollectionViewCell {
     }
     
     private func configureHierarchy() {
-        view.addSubview(plusButton)
-        view.addSubview(imageView)
-        contentView.addSubview(view)
+        contentView.addSubview(plusButton)
+        contentView.addSubview(imageView)
     }
     
     private func plusButtonLayout() {
